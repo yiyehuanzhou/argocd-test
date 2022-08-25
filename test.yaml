@@ -1,0 +1,46 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: test-mysql
+  namespace: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-mysql
+  template:
+    metadata:
+      name: test-mysql
+      labels:
+        app: test-mysql
+    spec:
+      volumes:
+        - name: data
+          hostPath:
+            path: /data/mysql
+            type: ''
+      containers:
+        - name: test-mysql
+          image: '10.50.0.191/nacos/mysql:5.7.32'
+          ports:
+            - containerPort: 3306
+              protocol: TCP
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: '123123'
+            - name: MYSQL_DATABASE
+              value: test
+            - name: MYSQL_USER
+              value: test
+            - name: MYSQL_PASSWORD
+              value: '123123'
+          resources:
+            limits:
+              cpu: 500m
+              memory: '536870912'
+            requests:
+              cpu: 500m
+              memory: '536870912'
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/mysql
